@@ -1,0 +1,28 @@
+version: '4'
+#This wan go create the general Container
+services:
+  php-env:
+    build: .
+    volumes:
+      - "./src:/var/www/html"
+    ports:
+      - 4000:80
+
+#This wan go create Dataase with root for user and password because na just test
+  mysql_db:
+    image: mysql:latest
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - "./db:/docker-entrypoint-initdb.d/:ro" #sync container and local sql 
+      
+#This wan go create PHPMYADMIN wey we go take access the database 
+  phpmyadmin:
+    image: phpmyadmin:latest
+    restart: always
+    ports:
+      - 4001:80
+    environment:
+      - PMA_ARBITRARY=1
